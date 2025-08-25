@@ -2186,8 +2186,8 @@ class ChatAgent(BaseAgent):
                 meta_dict["logprobs_info"] = logprobs_info
 
             # Adapt GPT-oss
-            if hasattr(choice.message, "reasoning_content"):
-                meta_dict["reasoning_content"] = choice.message.reasoning_content
+            if hasattr(choice.message, "reasoning"):
+                meta_dict["reasoning_content"] = choice.message.reasoning
 
             chat_message = BaseMessage(
                 role_name=self.role_name,
