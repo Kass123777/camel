@@ -1539,6 +1539,11 @@ class ChatAgent(BaseAgent):
                 response, original_response_format
             )
 
+        # Adapt GPT-oss
+        if len(response.output_messages) == 1:
+            if "<|channel|>" in response.output_messages[0].content:
+                response.output_messages[0].content = response.output_messages[0].content.replace("<|channel|>", " ")
+
         self._record_final_output(response.output_messages)
 
         # Clean tool call messages from memory after response generation
@@ -2179,6 +2184,10 @@ class ChatAgent(BaseAgent):
             meta_dict = {}
             if logprobs_info := handle_logprobs(choice):
                 meta_dict["logprobs_info"] = logprobs_info
+
+            # Adapt GPT-oss
+            if hasattr(choice.message, "reasoning_content"):
+                meta_dict["reasoning_content"] = choice.message.reasoning_content
 
             chat_message = BaseMessage(
                 role_name=self.role_name,

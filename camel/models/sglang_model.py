@@ -328,9 +328,18 @@ class SGLangModel(BaseModelBackend):
                 "Client is not initialized. Ensure the server is running."
             )
 
+        # Adapt GPT-oss
+        import json
+        refined_tools = []
+        if tools:
+            for tool in tools:
+                tool['function'].pop('strict', None)
+                refined_tools.append(tool)
+
         response = self._client.chat.completions.create(
             messages=messages,
             model=self.model_type,
+            tools=refined_tools,    # Adapt GPT-oss
             **self.model_config_dict,
         )
         update_current_observation(
